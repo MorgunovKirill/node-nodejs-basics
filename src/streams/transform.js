@@ -1,18 +1,14 @@
 import { Transform } from "stream";
 import { stdin, stdout } from 'node:process';
-import { createReadStream, createWriteStream } from 'node:fs';
 
 const transform = async () => {
   const reverse = new Transform({
     transform(chunk, encoding, callback) {
-      callback(null, chunk.split('').reverse.join(''));
+      callback(null, chunk.toString().split('').reverse().join(''))
     },
   });
 
-  stdin.on('data', (data) => {   
-    const readStream = createReadStream(data);  
-    stdout.write(readStream.pipe(reverse))
-  })
+  stdin.pipe(reverse).pipe(stdout);
 
 };
 
